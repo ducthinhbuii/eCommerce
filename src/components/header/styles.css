@@ -1012,7 +1012,7 @@ section
 .product-item
 {
 	/* width: 20%; */
-	height: 380px;
+	height: 400px;
 	cursor: pointer;
 }
 .product-item::after
@@ -1041,7 +1041,7 @@ section
 .product
 {
 	width: 100%;
-	height: 340px;
+	height: 360px;
 	border-right: solid 1px #e9e9e9;
 }
 .product_image
@@ -1058,12 +1058,12 @@ section
 	padding-left: 10px;
 	padding-right: 10px;
 }
-.product_name
-{
-	margin-top: 27px;
-}
 .product_name a
 {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2; /* Hiển thị tối đa 2 dòng */
+	overflow: hidden;
 	color: #1e1e27;
 	line-height: 20px;
 }

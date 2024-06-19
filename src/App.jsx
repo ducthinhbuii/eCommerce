@@ -4,6 +4,7 @@ import {Header} from './components/header/Header'
 import {Footer} from './components/footer/Footer'
 import {Home} from './pages/home/Home'
 import { Categories } from './pages/categories/Categories'
+import { Detail } from './pages/detail/Detail'
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/categories" element={<Categories/>} />
+          <Route path="/detail" element={<Detail/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>

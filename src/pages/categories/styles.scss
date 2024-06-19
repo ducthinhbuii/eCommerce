@@ -1236,17 +1236,17 @@ section
 	color: #fe4c50;
 	margin-right: 21px;
 }
-.checkboxes li.active i::after
-{
-	display: block;
-	position: absolute;
-	top: 1px;
-	left: 1px;
-	font-family: 'FontAwesome';
-	font-size: 10px;
-	content: '\f00c';
-	color: #FFFFFF;
-}
+// .checkboxes li.active i::after
+// {
+// 	display: block;
+// 	position: absolute;
+// 	top: 1px;
+// 	left: 1px;
+// 	font-family: 'FontAwesome';
+// 	font-size: 10px;
+// 	content: '\f00c';
+// 	color: #FFFFFF;
+// }
 .checkboxes
 {
 	height: 200px;
@@ -1301,13 +1301,13 @@ section
 	width: 100%;
 	margin-top: 57px;
 }
-.product-item
+.categories .product-item
 {
 	// width: 25%;
 	height: 380px;
 	cursor: pointer;
 }
-.product-item::after
+.categories .product-item::after
 {
 	display: block;
 	position: absolute;
@@ -1330,7 +1330,7 @@ section
 	box-shadow: 0 25px 29px rgba(63, 78, 100, 0.15);
 	border: solid 2px rgba(235,235,235,1);
 }
-.product
+.categories .product
 {
 	width: 100%;
 	height: 340px;
@@ -1349,10 +1349,6 @@ section
 	text-align: center;
 	padding-left: 10px;
 	padding-right: 10px;
-}
-.product_name
-{
-	margin-top: 27px;
 }
 .product_name a
 {
@@ -1782,13 +1778,13 @@ section
 
 @media only screen and (max-width: 1199px)
 {
-	.product-item
+	.categories .product-item
 	{
-		height: 360px;
+		height: 340px;
 	}
-	.product
+	.categories .product
 	{
-		height: 320px;
+		height: 300px;
 	}
 }
 
@@ -1848,9 +1844,13 @@ section
     .product-grid{
         grid-template-columns: repeat(3 , 1fr);
     }
-	.product-item
+	.categories .product-item
 	{
-		// width: 33.33333333%;
+		height: 360px;
+	}
+	.categories .product
+	{
+		height: 320px;
 	}
 	.benefit_col
 	{
@@ -1959,14 +1959,14 @@ section
 	{
 		float: none;
 	}
-	.product-item
+	.categories .product-item
 	{
 		// width: 33.333333333333%;
-		height: 345px;
+		height: 325px;
 	}
-	.product
+	.categories .product
 	{
-		height: 305px;
+		height: 285px;
 	}
 	.benefit_col
 	{
@@ -1996,12 +1996,12 @@ section
     .product-grid{
         grid-template-columns: repeat(2, 1fr);
     }
-	.product-item
+	.categories .product-item
 	{
 		// width: 50%;
 		height: 420px;
 	}
-	.product
+	.categories .product
 	{
 		height: 380px;
 	}
@@ -2116,12 +2116,12 @@ section
     .product-grid{
         grid-template-columns: repeat(1, 1fr);
     }
-	.product-item
+	.categories .product-item
 	{
 		// width: 100%;
 		height: auto;
 	}
-	.product
+	.categories .product
 	{
 		height: auto;
 	}
