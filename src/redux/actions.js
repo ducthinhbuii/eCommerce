@@ -5,9 +5,9 @@ export const addCartItem = (data) => {
     }
 }
 
-export const loginAction = (data) => {
+export const saveUserLogin = (data) => {
     return {
-        type: "auth/login",
+        type: "auth/saveUserLogin",
         payload: data
     }
 }

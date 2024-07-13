@@ -1,9 +1,13 @@
 import React from 'react'
 import './styles.css'
 import {useNavigate} from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { getUserInfo } from '../../redux/selector'
 
 export const Header = () => {
 	const navigate = useNavigate();
+	const userInfo = useSelector(getUserInfo);
+	console.log(userInfo)
 	return (
 		<>
 		<header class="header trans_300">

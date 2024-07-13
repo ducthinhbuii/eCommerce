@@ -1,14 +1,14 @@
 import axios from "axios";
 
-const BASE_URL = "https://8081-idx-movie-project-1717140701197.cluster-bs35cdu5w5cuaxdfch3hqqt7zm.cloudworkstations.dev";
+const BASE_URL = "https://be-ecommerce-zyst.onrender.com";
 
-export const fetchDataFromAPI = async(url, params, token, cookie) => {
+export const fetchDataFromAPI = async(url, token, cookie, params) => {
     try {
         const {data} = await axios.get(
             BASE_URL + url,
             {
                 headers: {
-                    Authorization: "bearer " + token,
+                    Authorization: "Bearer " + token,
                     Cookie: cookie
                 },
                 params

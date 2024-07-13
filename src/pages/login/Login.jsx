@@ -2,8 +2,9 @@ import React from 'react'
 import './styles.scss'
 import { useNavigate } from 'react-router-dom'
 import { postDataToAPI } from '../../ultis/postApi'
+import { fetchDataFromAPI } from '../../ultis/api'
 import {useSelector, useDispatch } from 'react-redux';
-import { loginAction } from '../../redux/actions';
+import {saveUserLogin } from '../../redux/actions';
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -17,13 +18,15 @@ export const Login = () => {
             password: dataRaw.get('password')
         }
         
-        console.log(userData)
         try {
             const data = await postDataToAPI("/api/user/login", userData);
+            console.log(data)
             if(data?.authenticated){
                 localStorage.setItem("jwt", data.token);
                 
-                
+                const userInfo = await fetchDataFromAPI("/api/user/me", data.token);
+                dispatch(saveUserLogin(userInfo))
+                console.log(userInfo)
             }
         } catch (error) {
             console.log(error)
