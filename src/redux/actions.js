@@ -5,7 +5,7 @@ export const addCartItem = (data) => {
     }
 }
 
-export const login = (data) => {
+export const loginAction = (data) => {
     return {
         type: "auth/login",
         payload: data

@@ -1,12 +1,13 @@
 import React from 'react'
 import './styles.scss'
 import { useNavigate } from 'react-router-dom'
-import usePost from '../../hooks/usePost'
 import { postDataToAPI } from '../../ultis/postApi'
-import axios from 'axios'
+import {useSelector, useDispatch } from 'react-redux';
+import { loginAction } from '../../redux/actions';
 
 export const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,23 +18,16 @@ export const Login = () => {
         }
         
         console.log(userData)
-        // const data = await postDataToAPI("/api/user/login", userData);
-        // console.log(data)
         try {
-            const {test} = await axios.get(
-                "https://8081-idx-movie-project-1717140701197.cluster-bs35cdu5w5cuaxdfch3hqqt7zm.cloudworkstations.dev/api/order/",
-                {
-                    withCredentials: true,
-                    headers: {
-                        Authorization: "bearer " + "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2Nsb3VkLmdvb2dsZS5jb20vd29ya3N0YXRpb25zIiwiYXVkIjoiaWR4LW1vdmllLXByb2plY3QtMTcxNzE0MDcwMTE5Ny5jbHVzdGVyLWJzMzVjZHU1dzVjdWF4ZGZjaDNocXF0N3ptLmNsb3Vkd29ya3N0YXRpb25zLmRldiIsImlhdCI6MTcyMDc2MDE3MywiZXhwIjoxNzIwNzYzNzczfQ.LsB4scgBCryeTQPsd33C6K7QKZBAMhN3JuzHjstAIxRf1rS12mYJBm5PBT_fzJWnUbJPBFP6lAMSHbFaXDJaO9MyXgFE2CMzBpSifvBFXn_wBxn13kRFAD0Ln9Bl6AQFHqsdjFJheX66m0xdxYiJXqUKeWf_0o2Qt9GIfqW5MZbcCgHyByaH2qkQ_jOGJUjaJ2Z-7qzfrieI5Y8lF2VUsPW1sycwXVVWBdyFI2QzvKX8EZDovKeKxYpOKQLNseRuT8wJpBVyT8_NZXFB64EJiBI_djLUfpBLiY-s-dggpEoWX3zKd9HDpPCrG4Q4Vs031IMIC1wy5TIaTFtTyIaoTg",
-                    },
-                }
-            )
-            console.log(test)
+            const data = await postDataToAPI("/api/user/login", userData);
+            if(data?.authenticated){
+                localStorage.setItem("jwt", data.token);
+                
+                
+            }
         } catch (error) {
             console.log(error)
         }
-
     }
 
     return (
