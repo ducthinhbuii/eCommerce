@@ -12,3 +12,10 @@ export const saveUserLogin = (data) => {
     }
 }
 
+export const saveUserLogout = (data) => {
+    return {
+        type: "auth/saveUserLogout",
+        payload: data
+    }
+}
+

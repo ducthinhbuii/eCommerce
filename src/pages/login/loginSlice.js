@@ -1,4 +1,5 @@
 const initState = {
+    auth: false,
     userInfo: {}
 }
 
@@ -8,7 +9,9 @@ const initState = {
 const authReducer = (state = initState, action) => {
     switch (action.type) {
         case 'auth/saveUserLogin':
-            return {...initState, userInfo: action.payload}
+            return {...initState, auth:true, userInfo: action.payload}
+        case 'auth/saveUserLogout':
+            return {...initState, auth:false, userInfo: {}}
         default:
             return state
     }

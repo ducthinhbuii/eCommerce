@@ -1,13 +1,41 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './styles.css'
 import {useNavigate} from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getUserInfo } from '../../redux/selector'
+import { saveUserLogin, saveUserLogout } from '../../redux/actions'
+import { fetchDataFromAPI } from '../../ultis/api'
 
 export const Header = () => {
 	const navigate = useNavigate();
-	const userInfo = useSelector(getUserInfo);
-	console.log(userInfo)
+	const jwt = localStorage.getItem("jwt");
+	const auth = useSelector(getUserInfo);
+	const dispatch = useDispatch();
+	console.log(auth)
+
+	useEffect(() => {
+        dispatchUserInfo();
+        console.log("render")
+    }, [jwt])
+
+    const dispatchUserInfo = async () => {
+        if (jwt) {
+            try {
+                const userInfo = await fetchDataFromAPI("/api/user/me", jwt);
+                dispatch(saveUserLogin(userInfo));
+                console.log(userInfo);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
+
+	const handleLogout = ()=> {
+		console.log('logout')
+		localStorage.clear();
+		dispatch(saveUserLogout())
+	}
+
 	return (
 		<>
 		<header class="header trans_300">
@@ -46,16 +74,25 @@ export const Header = () => {
 											<li><a href="#">Spanish</a></li>
 										</ul>
 									</li>
-									<li class="account">
+									{/* <li class="account">
 										<a href="#">
 											My Account
 											<i class="fa fa-angle-down"></i>
 										</a>
-										<ul class="account_selection">
-											<li><a href="#"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
-											<li><a href="#"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
-										</ul>
-									</li>
+										{auth?.auth ? (
+											<ul class="account_selection">
+											<li><a><i class="fa-solid fa-user"></i>{auth.userInfo.firstName +" "+ auth.userInfo.lastName}</a></li>
+											<li><a><i class="fa-solid fa-right-from-bracket"></i>Logout</a></li>
+											</ul>
+											
+										) : (
+											<ul class="account_selection">
+											<li><a onClick={() => navigate('/login')}><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+											<li><a onClick={() => navigate('/register')}><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+											</ul>
+										)}
+										
+									</li> */}
 								</ul>
 							</div>
 						</div>
@@ -81,7 +118,24 @@ export const Header = () => {
 								</ul>
 								<ul class="navbar_user">
 									<li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
-									<li><a href="#"><i class="fa fa-user" aria-hidden="true"></i></a></li>
+									<li className='navbar_user_account'>
+										<a style={{display: 'inline-block', width: 'auto', padding: '0 16px'}} href="#">
+										<i style={{marginRight: '10px'}} class="fa fa-user" aria-hidden="true"></i>
+										{auth && auth.userInfo && auth.userInfo.username ? auth.userInfo.username : 'Login'}
+										</a>
+										{auth?.auth ? (
+
+										<ul class="account_selection">
+											<li><a><i class="fa-solid fa-user"></i>{auth.userInfo.firstName +" "+ auth.userInfo.lastName}</a></li>
+											<li><a onClick={handleLogout}><i class="fa-solid fa-right-from-bracket"></i>Logout</a></li>
+										</ul>
+										) : (
+										<ul class="account_selection">
+											<li><a onClick={() => navigate('/login')}><i class="fa-solid fa-user"></i>Login</a></li>
+											<li><a onClick={() => navigate('/register')}><i class="fa fa-user-plus"></i>Register</a></li>
+										</ul>
+										)}
+									</li>
 									<li class="checkout">
 										<a
 											onClick={() => navigate('/cart')}
@@ -135,10 +189,17 @@ export const Header = () => {
 				My Account
 				<i class="fa fa-angle-down"></i>
 				</a>
+				{auth?.auth ? (
 				<ul class="menu_selection">
-				<li><a href="#"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
-				<li><a href="#"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+					<li><a><i class="fa-solid fa-user"></i>{auth.userInfo.firstName +" "+ auth.userInfo.lastName}</a></li>
+					<li><a><i class="fa-solid fa-right-from-bracket"></i>Logout</a></li>
 				</ul>
+				) : (
+				<ul class="menu_selection">
+					<li><a onClick={() => navigate('/login')}><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
+					<li><a onClick={() => navigate('/register')}><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
+				</ul>
+				) }
 			</li>
 			<li class="menu_item"><a href="#">home</a></li>
 			<li class="menu_item"><a href="#">shop</a></li>

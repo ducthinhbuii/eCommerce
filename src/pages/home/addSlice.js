@@ -34,7 +34,7 @@ const homeReducer = (state = initState, action) => {
                 cartItem: [...state.home.cartItem, {...action.payload, quantity:1}]
             }
         default:
-            return state
+            return state.home
     }
 }
 

@@ -1,9 +1,9 @@
 export const getAllCartItems = (state) => {
    console.log(state)
-   return state.home.cartItem
+   return state?.home?.cartItem
 };
 
 export const getUserInfo = (state) => {
    console.log(state)
-   return state.auth.userInfo
+   return state?.auth
 };

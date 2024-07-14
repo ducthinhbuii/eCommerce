@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './styles.scss'
 import { useNavigate } from 'react-router-dom'
 import { postDataToAPI } from '../../ultis/postApi'
@@ -9,6 +9,24 @@ import {saveUserLogin } from '../../redux/actions';
 export const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+
+    useEffect(() => {
+        dispatchUserInfo();
+        console.log("render")
+    }, [jwt])
+
+    const dispatchUserInfo = async () => {
+        if (jwt) {
+            try {
+                const userInfo = await fetchDataFromAPI("/api/user/me", jwt);
+                dispatch(saveUserLogin(userInfo));
+                console.log(userInfo);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,6 +44,7 @@ export const Login = () => {
                 
                 const userInfo = await fetchDataFromAPI("/api/user/me", data.token);
                 dispatch(saveUserLogin(userInfo))
+                navigate(-1);
                 console.log(userInfo)
             }
         } catch (error) {
