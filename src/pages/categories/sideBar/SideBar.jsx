@@ -1,8 +1,19 @@
 import React, { useState } from 'react'
 import { RangeSlider } from '../../../components/rangeSlider/RangeSlider'
+import useFetch from '../../../hooks/useFetch';
+import {TOKEN} from '../../../ultis/setting'
+import { useNavigate } from 'react-router-dom';
 
-export const SideBar = () => {
+export const SideBar = ({categoryId}) => {
     const [selectedSizes, setSelectedSizes] = useState([]);
+    const jwt = localStorage.getItem("jwt");
+    const url = categoryId ? `/api/category/${categoryId}` : "/api/category/get-top-cat";
+    const {data, isLoading, error} = useFetch(url);
+    const [isVisible, setIsVisible] = useState(true);
+    const [selectedCategoryId, setSelectedCategoryId] = useState('');
+    const navigate = useNavigate();
+    // console.log(url)
+    // console.log(data)
 
     const handleSizeClick = (size) => {
         const newSelectedSizes = [...selectedSizes];
@@ -13,6 +24,43 @@ export const SideBar = () => {
         }
     };
 
+    const toggleSubCat = (categoryId, level) => {
+        if(categoryId !== selectedCategoryId ||isVisible === false){
+            setIsVisible(true)
+        } else {
+            setIsVisible(false)
+        }
+        setSelectedCategoryId(categoryId)
+    }
+
+    const renderCategories = (categoryTree, maxLevel) => {
+        return (
+            categoryTree.map((category) => {
+                const check = category?.categoryParentId === selectedCategoryId
+                return (
+                    <>
+                    <li 
+                    style={{display: category.level == maxLevel - 1 || (check && isVisible)  ? 'flex' : 'none' }}
+                    >
+                        <a onClick={() => navigate(`/categories/${category.categoryId}`)} style={{ marginLeft: category.level === maxLevel ? '20px' : '0px', display: 'inline-block' }}>
+                            {category.name}
+                        </a>
+                        <i 
+                        class="fa-solid fa-arrow-down-short-wide"
+                        style={{display: category.level < maxLevel && category.children && category.children.length > 0 ? 'inline-block' : 'none' ,padding: '0 10px'}}
+                        onClick={() => {toggleSubCat(category.categoryId,category.level)}}
+                        ></i>
+    
+                    </li>
+                    {category.level < maxLevel && category.children && renderCategories(category.children, maxLevel, check ? true : false)}
+                    </>
+                    )
+            })
+            // <li key={category.name} onClick={() => toggleSubCat(category.categoryId,level)} style={{display: category?.categoryParent?.categoryId === selectedCategoryId || category.level === selectedLevel ? 'list-item' : 'none' }}>
+            
+        );
+    };
+
   return (
     <div class="sidebar">
     <div class="sidebar_section">
@@ -20,12 +68,14 @@ export const SideBar = () => {
             <h5>Product Category</h5>
         </div>
         <ul class="sidebar_categories">
-            <li><a href="#">Men</a></li>
+            {data && data[0] && renderCategories(data, data[0].level + 1)}
+            
+            {/* <li><a href="#">Men</a></li>
             <li ><a href="#"><span><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>Women</a></li>
             <li><a href="#">Accessories</a></li>
             <li><a href="#">New Arrivals</a></li>
             <li><a href="#">Collection</a></li>
-            <li><a href="#">Shop</a></li>
+            <li><a href="#">Shop</a></li> */}
         </ul>
     </div>
 

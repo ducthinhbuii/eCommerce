@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { fetchDataFromAPI } from "../ultis/api";
 
-const useFetch = (url) => {
+const useFetch = (url, token) => {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const jwt = localStorage.getItem("jwt");
 
     useEffect(() => {
         fetchData()
@@ -15,7 +16,7 @@ const useFetch = (url) => {
         setData(null);
         setError(null);
         try {
-            const data = await fetchDataFromAPI(url);
+            const data = await fetchDataFromAPI(url, jwt);
             setIsLoading(false)
             setData(data);
         } catch (error) {

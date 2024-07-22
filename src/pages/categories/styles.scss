@@ -1137,6 +1137,14 @@ section
 {
 	color: #51545f;
 }
+.breadcrumbs{
+	a:not([href]):not([class]){
+		color: #1e1e27;
+		&:hover{
+			color: #b5aec4;
+		}
+	}
+}
 
 /*********************************
 6. Sidebar
@@ -1167,6 +1175,7 @@ section
 	font-size: 18px;
 	margin-bottom: 21px;
 }
+
 .sidebar_categories li.active a
 {
 	color: #fe4c50;
@@ -1188,6 +1197,23 @@ section
 .sidebar_categories li a span
 {
 	margin-right: 5px;
+}
+.sidebar_categories{
+	li{
+		align-items: center;
+		justify-content: space-between;
+		i{
+			cursor: pointer;
+		}
+		a:not([href]):not([class]) {
+			cursor: pointer;
+			text-decoration: none;
+			// color: #51545f;
+			&:hover{
+				color: #b5aec4;
+			}
+		}
+	}
 }
 #slider-range
 {
