@@ -19,3 +19,11 @@ export const saveUserLogout = (data) => {
     }
 }
 
+export const filterRangePrice = (data) => {
+    console.log(data)
+    return {
+        type: "filter/rangePrice",
+        payload: data
+    }
+}
+

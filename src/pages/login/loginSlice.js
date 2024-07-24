@@ -13,7 +13,7 @@ const authReducer = (state = initState, action) => {
         case 'auth/saveUserLogout':
             return {...initState, auth:false, userInfo: {}}
         default:
-            return state
+            return state?.auth
     }
 }
 

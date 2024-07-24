@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './styles.scss'
 import { useParams } from 'react-router-dom'
 import { BreadCrumb } from './breadCrumb/BreadCrumb'
@@ -17,7 +17,7 @@ export const Categories = () => {
 		        <div class="col product_section clearfix">
                     <BreadCrumb categoryId={categoryId}/>
                     <SideBar categoryId={categoryId}/>
-                    <Products/>
+                    <Products categoryId={categoryId}/>
                 </div>
             </div>
         </div>

@@ -24,8 +24,6 @@ export const BreadCrumb = ({categoryId}) => {
         const data = await response.data;
         console.log(data[0])
         if(data[0]){
-          console.log('ok')
-          console.log(data[0].name)
           tmpCat.unshift({
             categoryId: data[0].categoryId,
             name: data[0].name
@@ -46,6 +44,8 @@ export const BreadCrumb = ({categoryId}) => {
     if(categoryId){
       let tmpCat = []
       findRootCat(categoryId, tmpCat)
+    } else {
+      setCategories([])
     }
   }, [categoryId])
 

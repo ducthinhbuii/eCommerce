@@ -896,6 +896,8 @@ section
 
 .product_sorting_container_bottom
 {
+	display: flex;
+	justify-content: center;
 	margin-top: 24px;
 }
 .product_sorting_container_bottom .product_sorting
@@ -1011,7 +1013,7 @@ section
 	cursor: pointer;
 	text-align: center;
 	border: solid 1px #ecedee;
-	margin-right: 16px;
+	// margin: 0 8px;
 }
 .product_sorting_container_bottom .pages .page_current
 {
@@ -1079,26 +1081,39 @@ section
 {
 	display: inline-block;
 	line-height: 40px;
-	margin-right: 31px;
 }
-.page_total span
-{
-	margin-right: 14px;
+
+.page_total{
+	text-align: center;
+	width: 40px;
 }
-.page_next
+
+.page_first,
+.page_final,
+.page_next,
+.page_prev
 {
 	display: inline-block;
 	line-height: 40px;
 	cursor: pointer;
+	margin: 0 8px;
 }
-.page_next:hover i
+
+.page_first:hover i,
+.page_final:hover i,
+.page_next:hover i,
+.page_prev:hover i
 {
 	color: #b5aec4;
 }
-.page_next i
+
+.page_first i,
+.page_final i,
+.page_next i,
+.page_prev i
 {
 	font-size: 18px;
-	color: #51545f;
+	color: white;
 }
 .showing_results
 {
@@ -1326,6 +1341,7 @@ section
     grid-template-columns: repeat(4, 1fr);
 	width: 100%;
 	margin-top: 57px;
+	gap: 10px;
 }
 .categories .product-item
 {
@@ -1376,6 +1392,10 @@ section
 	padding-left: 10px;
 	padding-right: 10px;
 }
+.product_name{
+	min-height: 40px;
+	margin-top: 8px;
+}
 .product_name a
 {
 	color: #1e1e27;
@@ -1406,10 +1426,11 @@ section
 {
 	position: absolute;
 	top: 15px;
-	width: 50px;
+	padding: 0 4px;
+	// width: 50px;
 	height: 22px;
 	border-radius: 3px;
-	text-transform: uppercase;
+	// text-transform: uppercase;
 }
 .product_bubble span
 {

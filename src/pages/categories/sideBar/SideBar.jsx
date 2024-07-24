@@ -83,11 +83,12 @@ export const SideBar = ({categoryId}) => {
         <div class="sidebar_title">
             <h5>Filter by Price</h5>
         </div>
-        <p>
+        <RangeSlider/>
+        {/* <p>
             <RangeSlider/>
-        </p>
-        <div id="slider-range"></div>
-        <div class="filter_button"><span>filter</span></div>
+        </p> */}
+        {/* <div id="slider-range"></div>
+        <div class="filter_button"><span>filter</span></div> */}
     </div>
 
     <div class="sidebar_section">
