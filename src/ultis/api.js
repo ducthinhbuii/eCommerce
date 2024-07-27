@@ -14,9 +14,16 @@ export const fetchDataFromAPI = async(url, token, cookie, params) => {
                 params
             }
         )
+        if(typeof data === 'string'){
+            return {error: true, msg: 'Not found'}
+        }
+        console.log(data)
         return data;
     } catch (error) {
-        console.log(error);
-        return error;
+        console.log('error');
+        return {
+            error: true,
+            message: error.message
+        };
     }
 }

@@ -2,29 +2,39 @@ import React, { useEffect } from 'react'
 import './styles.css'
 import {useNavigate} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserInfo } from '../../redux/selector'
-import { saveUserLogin, saveUserLogout } from '../../redux/actions'
+import { getAllCartItems, getUserInfo } from '../../redux/selector'
+import { getCart, saveUserLogin, saveUserLogout } from '../../redux/actions'
 import { fetchDataFromAPI } from '../../ultis/api'
+import useFetch from '../../hooks/useFetch'
 
 export const Header = () => {
+	const auth = useSelector(getUserInfo)
+    const {data, isLoading, error} = useFetch(`/api/cart/${auth.userInfo?.id}`)
+	const cart = useSelector(getAllCartItems)
 	const navigate = useNavigate();
 	const jwt = localStorage.getItem("jwt");
-	const auth = useSelector(getUserInfo);
 	const dispatch = useDispatch();
-	console.log(auth)
 
 	useEffect(() => {
+		if(data?.cartId){
+			dispatch(getCart(data))
+		}
         dispatchUserInfo();
         console.log("render")
-    }, [jwt])
+    }, [data])
 
     const dispatchUserInfo = async () => {
         if (jwt) {
             try {
                 const userInfo = await fetchDataFromAPI("/api/user/me", jwt);
-                dispatch(saveUserLogin(userInfo));
-                console.log(userInfo);
+				if(userInfo.error){
+					handleLogout()
+				} else {
+					dispatch(saveUserLogin(userInfo));
+					console.log(userInfo);
+				}
             } catch (error) {
+				handleLogout()
                 console.log(error);
             }
         }
@@ -109,12 +119,12 @@ export const Header = () => {
 							</div>
 							<nav class="navbar">
 								<ul class="navbar_menu">
-									<li><a href="#">home</a></li>
-									<li><a href="#">shop</a></li>
+									<li><a href="#" onClick={(e) => {e.preventDefault(); navigate('/')}}>home</a></li>
+									<li><a href="#" onClick={(e) => {e.preventDefault(); navigate('/categories')}}>shop</a></li>
 									<li><a href="#">promotion</a></li>
 									<li><a href="#">pages</a></li>
 									<li><a href="#">blog</a></li>
-									<li><a href="contact.html">contact</a></li>
+									<li><a href="#">contact</a></li>
 								</ul>
 								<ul class="navbar_user">
 									<li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
@@ -141,7 +151,7 @@ export const Header = () => {
 											onClick={() => navigate('/cart')}
 										>
 											<i class="fa fa-shopping-cart" aria-hidden="true"></i>
-											<span id="checkout_items" class="checkout_items">2</span>
+											<span id="checkout_items" class="checkout_items">{cart?.totalItem}</span>
 										</a>
 									</li>
 								</ul>

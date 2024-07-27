@@ -1,4 +1,9 @@
 .cart{
+    .custom-cart{
+        overflow: hidden;
+        height: 700px;
+        overflow-y: auto;
+    }
     .container{
         padding-top: 200px;
     }
@@ -16,6 +21,9 @@
     @media(max-width:767px){
         .card{
             margin: 3vh auto;
+        }
+        .custom-cart{
+            height: 700px;
         }
     }
     .cart{
@@ -52,6 +60,14 @@
         padding: 0;
     }.row{
         margin: 0;
+        
+    }
+    .text-name{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+
     }
     .title b{
         font-size: 1.5rem;

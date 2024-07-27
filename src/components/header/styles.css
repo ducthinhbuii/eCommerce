@@ -636,6 +636,9 @@ section
 {
 	color: #b5aec4;
 }
+.checkout:hover{
+	cursor: pointer;
+}
 .checkout a
 {
 	background: #eceff6;
@@ -950,9 +953,10 @@ section
 {
 	height: 50px;
 	background: #FFFFFF;
-	min-width: 180px;
-	padding-left: 25px;
-	padding-right: 25px;
+	/* min-width: 180px; */
+	padding-left: 10px;
+	padding-right: 10px;
+	color: white;
 }
 .banner_category a
 {

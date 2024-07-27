@@ -1087,6 +1087,9 @@ section
 	text-align: center;
 	width: 40px;
 }
+.page_total:hover{
+	cursor: pointer;
+}
 
 .page_first,
 .page_final,
@@ -1113,7 +1116,7 @@ section
 .page_prev i
 {
 	font-size: 18px;
-	color: white;
+	color: #fe4c50;;
 }
 .showing_results
 {

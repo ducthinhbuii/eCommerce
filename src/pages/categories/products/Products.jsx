@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useFetch from '../../../hooks/useFetch';
 import {useSelector} from 'react-redux';
 import { getPriceRange } from '../../../redux/selector';
+import Spinner from '../../../components/spinner/Spinner'
 
 export const Products = ({categoryId}) => {
     const rangePrice = useSelector(getPriceRange);
@@ -68,9 +69,9 @@ export const Products = ({categoryId}) => {
         settingPagination(data)
     }, [data])
     
-
     return (
-        data && 
+        isLoading ? <Spinner isLogin={false}/> :
+        !isLoading && data && 
         <div class="main_content">
             <div class="products_iso">
                 <div class="row">
@@ -103,8 +104,10 @@ export const Products = ({categoryId}) => {
                             </ul>
 
                             <div class="pages d-flex flex-row align-items-center">
-                                {rangePrice.minPrice && rangePrice.minPrice > 0 && rangePrice.maxPrice && rangePrice.maxPrice &&
-                                    <span>Range Price: {rangePrice.minPrice} - {rangePrice.maxPrice}</span>
+                                {rangePrice && rangePrice.minPrice && rangePrice.minPrice > 0 && rangePrice.maxPrice && rangePrice.maxPrice &&
+                                    <span>Range Price: &nbsp;
+                                        {parseInt(rangePrice.minPrice).toLocaleString('vi-VN', {style:'currency',currency:'VND'})} - 
+                                        {parseInt(rangePrice.maxPrice).toLocaleString('vi-VN', {style:'currency',currency:'VND'})}</span>
                                 }
                     
                             </div>

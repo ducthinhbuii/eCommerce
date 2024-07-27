@@ -4,8 +4,8 @@ import rangePriceSlice from "../pages/categories/sideBar/rangePriceSlice"
 
 const rootReducer = (state, action) => {
     return {
-        home: homeReducer(state, action),
         auth: authReducer(state, action),
+        home: homeReducer(state, action),
         filter: rangePriceSlice(state, action),
     }
 }

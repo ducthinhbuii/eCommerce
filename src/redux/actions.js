@@ -1,6 +1,35 @@
+export const getCart = (data) => {
+    return {
+        type: "home/getCart",
+        payload: data
+    }
+}
+
+
 export const addCartItem = (data) => {
     return {
         type: "home/addCartItem",
+        payload: data
+    }
+}
+
+export const downQuantityCartItem = (data) => {
+    return {
+        type: "home/downQuantityCartItem",
+        payload: data
+    }
+}
+
+export const upQuantityCartItem = (data) => {
+    return {
+        type: "home/upQuantityCartItem",
+        payload: data
+    }
+}
+
+export const clearCartItem = (data) => {
+    return {
+        type: "home/clearCartItem",
         payload: data
     }
 }

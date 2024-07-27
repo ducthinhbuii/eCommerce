@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './styles.scss'
 import { useNavigate } from 'react-router-dom'
 import { postDataToAPI } from '../../ultis/postApi'
 import { fetchDataFromAPI } from '../../ultis/api'
 import {useSelector, useDispatch } from 'react-redux';
 import {saveUserLogin } from '../../redux/actions';
+import Spinner from '../../components/spinner/Spinner'
 
 export const Login = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
@@ -29,6 +31,7 @@ export const Login = () => {
     };
     
     const handleSubmit = async (e) => {
+        setIsLoading(true);
         e.preventDefault();
         const dataRaw = new FormData(e.currentTarget);
         const userData = {
@@ -38,6 +41,7 @@ export const Login = () => {
         
         try {
             const data = await postDataToAPI("/api/user/login", userData);
+            setIsLoading(false)
             console.log(data)
             if(data?.authenticated){
                 localStorage.setItem("jwt", data.token);
@@ -48,11 +52,14 @@ export const Login = () => {
                 console.log(userInfo)
             }
         } catch (error) {
+            setIsLoading(false)
             console.log(error)
         }
     }
 
     return (
+        isLoading ? <Spinner isLogin={true}/> :
+        !isLoading &&
         <div className='login'>
             <div class="container">
                 <div class="login-container">
