@@ -8,6 +8,9 @@ import { Detail } from './pages/detail/Detail'
 import { Cart } from './pages/cart/Cart'
 import { Login } from './pages/login/Login'
 import { Register } from './pages/register/Register'
+import { Order } from './pages/cart/order/Order'
+import { Address } from './pages/cart/address/Address'
+import { Payment } from './pages/payment/Payment'
 
 
 function App() {
@@ -20,8 +23,12 @@ function App() {
           <Route path="/" element={<Home/>} />
           <Route path="/categories/:categoryId?" element={<Categories/>} />
           <Route path="/detail" element={<Detail/>} />
-          <Route path="/cart" element={<Cart/>} />
-          <Route path="/login" element={<Login/>} />
+          <Route path="/cart" element={<Cart/>}>
+            <Route path="order" element={<Order/>}/>
+            <Route index element={<Address />} />
+          </Route>
+          <Route path="/payment-info/:orderId?" element={<Payment />} />
+          <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>} />
         </Routes>
         <Footer/>
