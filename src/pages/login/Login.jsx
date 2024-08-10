@@ -6,9 +6,14 @@ import { fetchDataFromAPI } from '../../ultis/api'
 import {useSelector, useDispatch } from 'react-redux';
 import {saveUserLogin } from '../../redux/actions';
 import Spinner from '../../components/spinner/Spinner'
+import { IDX_BE_URL } from '../../ultis/setting'
+
+import axios from 'axios'
+
 
 export const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [errLogin, setErrLogin] = useState(false)
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
@@ -18,7 +23,10 @@ export const Login = () => {
         console.log("render")
     }, [jwt])
 
+
     const dispatchUserInfo = async () => {
+        // const data = await fetchDataFromAPI("/api/order/", jwt)
+        // console.log(data)
         if (jwt) {
             try {
                 const userInfo = await fetchDataFromAPI("/api/user/me", jwt);
@@ -26,6 +34,21 @@ export const Login = () => {
                 console.log(userInfo);
             } catch (error) {
                 console.log(error);
+            }
+        } else {
+            try {
+                const {data} = await axios.get(
+                    IDX_BE_URL + "/api/user/google/me",
+                    {
+                        withCredentials: true
+                    }
+                )
+                console.log(data)
+                if(data.id){
+                    dispatch(saveUserLogin(data))
+                }
+            } catch (error) {
+                console.log(error)
             }
         }
     };
@@ -50,10 +73,33 @@ export const Login = () => {
                 dispatch(saveUserLogin(userInfo))
                 navigate(-1);
                 console.log(userInfo)
-            }
+                setErrLogin(false)
+            } else {
+                setErrLogin(true);
+            } 
         } catch (error) {
             setIsLoading(false)
             console.log(error)
+        }
+    }
+
+    const handleGoogleLogin = async() => {
+        console.log('login google')
+        try {
+            const data = await axios.get(
+                IDX_BE_URL + "/api/user/login-google",
+                {
+                    withCredentials: true
+                }
+            )
+            console.log(data)
+            // if(response.redirected){
+            //     document.location = response.url
+
+            // }
+        } catch (error) {
+            console.log(error);
+            document.location = IDX_BE_URL + "/api/user/login-google";
         }
     }
 
@@ -74,7 +120,14 @@ export const Login = () => {
                             <input type="text" placeholder="USERNAME" name="username"/>
                             <input type="password" placeholder="PASSWORD" name="password" />
                             <button type="submit" class="opacity">SUBMIT</button>
+                            {errLogin && <p style={{color: 'red'}}>Username or password incorrect</p>}
                         </form>
+                        <div className="login-oauth2">
+                            <span>OR LOGIN WITH</span>
+                            <span className="login-oauth2-google" onClick={handleGoogleLogin}>
+                                <i class="fa-brands fa-google icon-google"></i>
+                            </span>
+                        </div>
                         {/* <div th:if="${param.error}">
                             <p style="color: red">Invalid Username or Password</p>
                         </div> */}

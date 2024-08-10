@@ -1,1 +1,2 @@
 export const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkdWN0aGluaCIsImV4cCI6MTcyMTM3NTk2OX0.cwStKXDIIbu2iDB56bHQX03rHsCyE6T54KckJuyDyxs"
+export const IDX_BE_URL = "https://8081-idx-movie-project-1717140701197.cluster-bs35cdu5w5cuaxdfch3hqqt7zm.cloudworkstations.dev"

@@ -6,6 +6,8 @@ import { getAllCartItems, getUserInfo } from '../../redux/selector'
 import { getCart, saveUserLogin, saveUserLogout } from '../../redux/actions'
 import { fetchDataFromAPI } from '../../ultis/api'
 import useFetch from '../../hooks/useFetch'
+import { IDX_BE_URL } from '../../ultis/setting'
+import axios from 'axios'
 
 export const Header = () => {
 	const auth = useSelector(getUserInfo)
@@ -18,11 +20,30 @@ export const Header = () => {
 	useEffect(() => {
 		if(data?.cartId){
 			dispatch(getCart(data))
+		} else if (auth.userInfo?.isOauth){
+			getCartUser()
 		}
         dispatchUserInfo();
         console.log("render")
     }, [data])
 
+	const getCartUser = async () => {
+		try {
+			console.log(auth.userInfo?.id)
+			const cartUser = await axios.get(
+				IDX_BE_URL + `/api/cart/${auth.userInfo?.id}`,
+				{
+					withCredentials: true
+				}
+			)
+			if(cartUser.data){
+				dispatch(getCart(cartUser.data))
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
+ 
     const dispatchUserInfo = async () => {
         if (jwt) {
             try {
@@ -37,12 +58,36 @@ export const Header = () => {
 				handleLogout()
                 console.log(error);
             }
+        } else {  //handle oauth2 google
+            try {
+                const {data} = await axios.get(
+                    IDX_BE_URL + "/api/user/google/me",
+                    {
+                        withCredentials: true
+                    }
+                )
+                console.log(data)
+                if(data.id){
+                    dispatch(saveUserLogin(data))
+                }
+            } catch (error) {
+                console.log(error)
+            }
         }
     };
 
-	const handleLogout = ()=> {
+	const handleLogout = async ()=> {
+		if(auth.userInfo?.isOauth){
+			await axios.get(
+				IDX_BE_URL + "/logout",
+				{
+					withCredentials: true
+				}
+			)
+		} else {
+			localStorage.clear();
+		}
 		console.log('logout')
-		localStorage.clear();
 		dispatch(saveUserLogout())
 	}
 
@@ -130,13 +175,13 @@ export const Header = () => {
 									<li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
 									<li className='navbar_user_account'>
 										<a style={{display: 'inline-block', width: 'auto', padding: '0 16px'}} href="#">
-										<i style={{marginRight: '10px'}} class="fa fa-user" aria-hidden="true"></i>
+										{auth && auth.userInfo && <img src={auth.userInfo.avatar} style={{width: '26px', marginRight: '10px', borderRadius: '50%'}} alt="" />}
 										{auth && auth.userInfo && auth.userInfo.username ? auth.userInfo.username : 'Login'}
 										</a>
 										{auth?.auth ? (
 
 										<ul class="account_selection">
-											<li><a><i class="fa-solid fa-user"></i>{auth.userInfo.firstName +" "+ auth.userInfo.lastName}</a></li>
+											<li><a onClick={() => navigate('/user-info')}><i class="fa-solid fa-house"></i>My Account</a></li>
 											<li><a onClick={handleLogout}><i class="fa-solid fa-right-from-bracket"></i>Logout</a></li>
 										</ul>
 										) : (

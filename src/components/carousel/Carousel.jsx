@@ -1,11 +1,13 @@
 import React, { useRef } from 'react'
 import useFetch from '../../hooks/useFetch';
 import Spinner from '../spinner/Spinner';
+import { useNavigate } from 'react-router-dom';
 
 export const Carousel = () => {
     const carouselContainer = useRef();
     let url = `/api/product/?category=669e0704b5d62c4fa209768c`
     const {data, isLoading, error} = useFetch(url);
+    const navigate = useNavigate()
     
     const navigation = (dir) => {
         const container = carouselContainer.current;
@@ -32,7 +34,7 @@ export const Carousel = () => {
                         return (
                             <>
                                 <div class="owl-item product_slider_item">
-                                    <div class="product-item">
+                                    <div class="product-item" onClick={() => {navigate(`/detail?categoryId=${product.category.categoryId}&productId=${product.id}`)}}>
                                         <div class="product discount">
                                             <div class="product_image">
                                                 <img src={product.imgUrl} alt=""/>

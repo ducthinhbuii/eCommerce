@@ -5,21 +5,29 @@ import { addCartItem } from '../../redux/actions';
 import { getAllCartItems, getUserInfo } from '../../redux/selector';
 import Spinner from '../spinner/Spinner';
 import { postDataToAPI } from '../../ultis/postApi';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const ListCard = () => {
     const [pageSize, setPageSize] = useState(12);
     const [pageNumber, setPageNumber] = useState(1);
     let url = `/api/product/?pageSize=${pageSize}&pageNumber=${pageNumber - 1}`
     const {data, isLoading, error} = useFetch(url);
+    const [isLoad, setIsLoad] = useState(false)
     const [arrCurNumOfPages, setArrCurNumOfPages] = useState([])
     const totalPage = Math.ceil(data?.totalCount / pageSize);
     const auth = useSelector(getUserInfo);
     const token = localStorage.getItem("jwt");
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     // const data = useSelector(getAllCartItems);
     // console.log(data)
 
+    const notify = (text) => toast(text);
+
     const handleAddToCart = async (product) => {
+        setIsLoad(true);
         console.log(product)
         dispatch(addCartItem({product: product}))
         const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
@@ -29,6 +37,12 @@ export const ListCard = () => {
             discountPrice: product.discountPrice
         }, token);
         console.log(data)
+        if(data === "Add Item to Cart"){
+            notify("Add Item Successfully")
+        } else {
+            notify("Add Item Error, Try Again!")
+        }
+        setIsLoad(false)
         // dispatch(addCartItem(product))
     }
 
@@ -81,8 +95,8 @@ export const ListCard = () => {
     }, [data])
 
     return (
-        isLoading ? <Spinner isLogin={true}/> :
-        !isLoading && data && 
+        (isLoading && isLoad) ? <Spinner isLogin={true}/> :
+        !isLoading && !isLoad && data && 
         <div class="row">
             <div class="col">
                 <div class="product-grid">
@@ -90,7 +104,7 @@ export const ListCard = () => {
                         return (
                             <>
                                 <div class="product-item men">
-                                    <div class="product discount product_filter">
+                                    <div class="product discount product_filter" onClick={() => {navigate(`/detail?categoryId=${product.category.categoryId}&productId=${product.id}`)}}>
                                         <div class="product_image">
                                             <img src={product.imgUrl} alt=""/>
                                         </div>

@@ -11,7 +11,7 @@ export const fetchDataFromAPI = async(url, token, cookie, params) => {
                     Authorization: "Bearer " + token,
                     Cookie: cookie
                 },
-                params
+                params,
             }
         )
         if(typeof data === 'string'){
@@ -20,7 +20,7 @@ export const fetchDataFromAPI = async(url, token, cookie, params) => {
         console.log(data)
         return data;
     } catch (error) {
-        console.log('error');
+        console.log(error);
         return {
             error: true,
             message: error.message

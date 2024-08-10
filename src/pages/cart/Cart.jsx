@@ -5,9 +5,10 @@ import { getAllCartItems, getCartTotalMoney, getUserInfo } from '../../redux/sel
 import { Outlet, useNavigate } from 'react-router-dom'
 import { addCartItem, clearCartItem, downQuantityCartItem, upQuantityCartItem } from '../../redux/actions'
 import { postDataToAPI } from '../../ultis/postApi'
+import Spinner from '../../components/spinner/Spinner'
 
 export const Cart = () => {
-    
+    const [isLoad, setIsLoad] = useState(false)
     const auth = useSelector(getUserInfo)
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -16,6 +17,7 @@ export const Cart = () => {
     
     const handleDownQuantity = async (e, product) => {
         e.preventDefault();
+        setIsLoad(true)
         dispatch(downQuantityCartItem(product))
         const data = await postDataToAPI(`/api/cart/remove/${auth.userInfo.id}`, {
             productId: product.id,
@@ -24,10 +26,12 @@ export const Cart = () => {
             discountPrice: product.discountPrice
         }, token);
         console.log(data)
+        setIsLoad(false)
     }
 
     const handleUpQuantity = async (e, product) => {
         e.preventDefault();
+        setIsLoad(true)
         dispatch(addCartItem({product: product}))
         const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
             productId: product.id,
@@ -36,9 +40,11 @@ export const Cart = () => {
             discountPrice: product.discountPrice
         }, token);
         console.log(data)
+        setIsLoad(false)
     }
 
     const handleClearCartItem = async (product) => {
+        setIsLoad(true)
         console.log('clear')
         dispatch(clearCartItem(product))
         const data = await postDataToAPI(`/api/cart/remove-cart-item/${auth.userInfo.id}`, {
@@ -47,9 +53,12 @@ export const Cart = () => {
             discountPrice: product.discountPrice
         }, token);
         console.log(data)
+        setIsLoad(false)
     }
 
     return (
+        isLoad ? <Spinner isLogin={true}/> :
+        !isLoad &&
         data && data.cartItems &&
         <div className="cart">
             <div className="container">

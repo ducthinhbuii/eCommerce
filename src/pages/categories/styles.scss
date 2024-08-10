@@ -1143,6 +1143,10 @@ section
 	display: inline-block;
 	margin-right: 17px;
 }
+.breadcrumbs ul li:hover
+{
+	cursor: pointer;
+}
 .breadcrumbs ul li.active a
 {
 	color: #b9b4c7;

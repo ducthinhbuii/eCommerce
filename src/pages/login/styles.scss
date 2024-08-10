@@ -48,6 +48,25 @@
         -o-border-radius: 10px;
     }
 
+    .login-oauth2{
+        display: flex;
+        align-items: center;
+        .login-oauth2-google{
+            padding: 10px;
+            .icon-google{
+                font-size: 30px;
+            }
+            
+        }
+        .login-oauth2-google:hover{
+            cursor: pointer;
+            .icon-google:hover{
+                color: brown;
+            }
+            
+        }
+    }
+
     .login-container form input {
         display: block;
         padding: 14.5px;

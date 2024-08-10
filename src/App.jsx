@@ -11,6 +11,11 @@ import { Register } from './pages/register/Register'
 import { Order } from './pages/cart/order/Order'
 import { Address } from './pages/cart/address/Address'
 import { Payment } from './pages/payment/Payment'
+import { ToastContainer} from 'react-toastify';
+import { User } from './pages/user/User'
+import { Information } from './pages/user/infomation/Information'
+import { OrderStatus } from './pages/user/order-status/OrderStatus'
+import ProtectRouter from './ultis/ProtectRouter'
 
 
 function App() {
@@ -23,15 +28,31 @@ function App() {
           <Route path="/" element={<Home/>} />
           <Route path="/categories/:categoryId?" element={<Categories/>} />
           <Route path="/detail" element={<Detail/>} />
-          <Route path="/cart" element={<Cart/>}>
-            <Route path="order" element={<Order/>}/>
-            <Route index element={<Address />} />
-          </Route>
-          <Route path="/payment-info/:orderId?" element={<Payment />} />
+          
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>} />
+
+
+
+            
+          <Route element={<ProtectRouter />}>
+            
+            <Route path="/cart" element={<Cart/>}>
+              <Route path="order" element={<Order/>}/>
+              <Route index element={<Address />} />
+            </Route>
+
+            <Route path="/user-info" element={<User/>}>
+              <Route path="order-status" element={<OrderStatus/>}/>
+              <Route index element={<Information />} />
+            </Route>
+            
+            <Route path="/payment-info/:orderId?" element={<Payment />} />
+
+          </Route>
         </Routes>
         <Footer/>
+        <ToastContainer />
       </BrowserRouter>
     </>
   )

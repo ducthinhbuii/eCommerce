@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import useFetch from '../../../hooks/useFetch';
-import {useSelector} from 'react-redux';
-import { getPriceRange } from '../../../redux/selector';
+import {useDispatch, useSelector} from 'react-redux';
+import { getPriceRange, getUserInfo } from '../../../redux/selector';
 import Spinner from '../../../components/spinner/Spinner'
+import { addCartItem } from '../../../redux/actions';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { postDataToAPI } from '../../../ultis/postApi';
+import { useNavigate } from 'react-router-dom';
 
 export const Products = ({categoryId}) => {
     const rangePrice = useSelector(getPriceRange);
     const [pageSize, setPageSize] = useState(6);
     const [pageNumber, setPageNumber] = useState(1);
     const [sort, setSort] = useState('');
+    const token = localStorage.getItem("jwt");
+    const auth = useSelector(getUserInfo);
+    const [isLoad, setIsLoad] = useState(false)
     const [arrCurNumOfPages, setArrCurNumOfPages] = useState([])
     let url = categoryId 
         ? `/api/product/?category=${categoryId}&pageSize=${pageSize}&pageNumber=${pageNumber - 1}&sort=${sort}` 
@@ -19,6 +27,29 @@ export const Products = ({categoryId}) => {
     }
     const {data, isLoading, error} = useFetch(url);
     const totalPage = Math.ceil(data?.totalCount / pageSize);
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const notify = (text) => toast(text);
+
+    const handleAddToCart = async (product) => {
+        setIsLoad(true);
+        console.log(product)
+        dispatch(addCartItem({product: product}))
+        const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
+            productId: product.id,
+            quantity: 1,
+            price: product.price,
+            discountPrice: product.discountPrice
+        }, token);
+        console.log(data)
+        if(data === "Add Item to Cart"){
+            notify("Add Item Successfully")
+        } else {
+            notify("Add Item Error, Try Again!")
+        }
+        setIsLoad(false)
+    }
 
     const settingPagination = (data) => {
         if (data) {
@@ -56,22 +87,21 @@ export const Products = ({categoryId}) => {
         if(pageNumber !== 1){
           setPageNumber(pageNumber - 1);
         }
-      }
+    }
     
-      const handleNextPage = (page) => {
+    const handleNextPage = (page) => {
         if(pageNumber !== totalPage){
           setPageNumber(pageNumber + 1);
         }
-      }
+    }
     
-
     useEffect(()=> {
         settingPagination(data)
     }, [data])
     
     return (
-        isLoading ? <Spinner isLogin={false}/> :
-        !isLoading && data && 
+        (isLoading && isLoad) ? <Spinner isLogin={true}/> :
+        !isLoading && !isLoad && data &&
         <div class="main_content">
             <div class="products_iso">
                 <div class="row">
@@ -121,7 +151,7 @@ export const Products = ({categoryId}) => {
                                 return (
                                     <>
                                         <div class="product-item men">
-                                            <div class="product discount product_filter">
+                                            <div class="product discount product_filter" onClick={() => {navigate(`/detail?categoryId=${product.category.categoryId}&productId=${product.id}`)}}>
                                                 <div class="product_image">
                                                     <img src={product.imgUrl} alt=""/>
                                                 </div>
@@ -132,7 +162,9 @@ export const Products = ({categoryId}) => {
                                                     <div class="product_price">{product.price.toLocaleString('vi-VN', {style:'currency',currency:'VND'})}<span>{(product.discountPrice + product.price).toLocaleString('vi-VN', {style:'currency',currency:'VND'})}</span></div>
                                                 </div>
                                             </div>
-                                            <div class="red_button add_to_cart_button"><a href="#">add to cart</a></div>
+                                            <div class="red_button add_to_cart_button"
+                                                onClick={() => handleAddToCart(product)}
+                                            ><a href="#">add to cart</a></div>
                                         </div>
                                     </>
                                 )

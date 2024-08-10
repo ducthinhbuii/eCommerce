@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react'
+import useFetch from '../../../hooks/useFetch'
 
-export const Tab = () => {
+export const Tab = ({productId}) => {
     const [activeTab, setActiveTab] = useState('tab_1')
     const handleActiveTab = (tab) => {
         console.log('ok')
@@ -9,10 +10,11 @@ export const Tab = () => {
             setActiveTab(tab)
         }
     }
+    const {data, isLoading} = useFetch(`/api/product/${productId}`)
 
     return (
-        <div class="tabs_section_container">
-
+        data && !isLoading &&
+    <div class="tabs_section_container">
         <div class="container">
             <div class="row">
                 <div class="col">
@@ -40,33 +42,9 @@ export const Tab = () => {
                         
                     >
                         <div class="row">
-                            <div class="col-lg-5 desc_col">
-                                <div class="tab_title">
-                                    <h4>Description</h4>
-                                </div>
-                                <div class="tab_text_block">
-                                    <h2>Pocket cotton sweatshirt</h2>
-                                    <p>Nam tempus turpis at metus scelerisque placerat nulla deumantos solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis ut...</p>
-                                </div>
-                                <div class="tab_image">
-                                    <img src="https://github.com/thanhnam232/SaveSomthing/blob/main/desc_1.jpg?raw=true" alt=""/>
-                                </div>
-                                <div class="tab_text_block">
-                                    <h2>Pocket cotton sweatshirt</h2>
-                                    <p>Nam tempus turpis at metus scelerisque placerat nulla deumantos solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis ut...</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-5 offset-lg-2 desc_col">
-                                <div class="tab_image">
-                                    <img src="https://github.com/thanhnam232/SaveSomthing/blob/main/desc_2.jpg?raw=true" alt=""/>
-                                </div>
-                                <div class="tab_text_block">
-                                    <h2>Pocket cotton sweatshirt</h2>
-                                    <p>Nam tempus turpis at metus scelerisque placerat nulla deumantos solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis ut...</p>
-                                </div>
-                                <div class="tab_image desc_last">
-                                    <img src="https://github.com/thanhnam232/SaveSomthing/blob/main/desc_3.jpg?raw=true" alt=""/>
-                                </div>
+                            <div class="tab_title">
+                                <h4>Description</h4>
+                                <div className='tab_content' dangerouslySetInnerHTML={{ __html: data.description } } />
                             </div>
                         </div>
                     </div>
