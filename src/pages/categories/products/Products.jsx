@@ -3,7 +3,7 @@ import useFetch from '../../../hooks/useFetch';
 import {useDispatch, useSelector} from 'react-redux';
 import { getPriceRange, getUserInfo } from '../../../redux/selector';
 import Spinner from '../../../components/spinner/Spinner'
-import { addCartItem } from '../../../redux/actions';
+import { homeSlice } from '../../home/addSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { postDataToAPI } from '../../../ultis/postApi';
@@ -35,7 +35,7 @@ export const Products = ({categoryId}) => {
     const handleAddToCart = async (product) => {
         setIsLoad(true);
         console.log(product)
-        dispatch(addCartItem({product: product}))
+        dispatch(homeSlice.actions.addCartItem({product: product}))
         const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
             productId: product.id,
             quantity: 1,
@@ -147,7 +147,7 @@ export const Products = ({categoryId}) => {
     
                         <div class="product-grid">
                         {
-                            data.products.length >  0 && data.products?.map((product) => {
+                            data?.products?.length >  0 && data?.products?.map((product) => {
                                 return (
                                     <>
                                         <div class="product-item men">

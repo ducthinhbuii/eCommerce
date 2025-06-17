@@ -14,7 +14,7 @@ export const BreadCrumb = ({categoryId}) => {
       try {   
         const url = `/api/category/${categoryId}`
         const response = await axios.get(
-          "https://be-ecommerce-zyst.onrender.com" + url,
+          "http://localhost:8081" + url,
           {
               headers: {
                   Authorization: "Bearer " + token,

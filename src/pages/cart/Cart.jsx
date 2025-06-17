@@ -3,7 +3,7 @@ import './styles.scss'
 import { useDispatch, useSelector} from 'react-redux'
 import { getAllCartItems, getCartTotalMoney, getUserInfo } from '../../redux/selector'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { addCartItem, clearCartItem, downQuantityCartItem, upQuantityCartItem } from '../../redux/actions'
+import { homeSlice } from '../home/addSlice'
 import { postDataToAPI } from '../../ultis/postApi'
 import Spinner from '../../components/spinner/Spinner'
 
@@ -18,7 +18,7 @@ export const Cart = () => {
     const handleDownQuantity = async (e, product) => {
         e.preventDefault();
         setIsLoad(true)
-        dispatch(downQuantityCartItem(product))
+        dispatch(homeSlice.actions.downQuantityCartItem(product))
         const data = await postDataToAPI(`/api/cart/remove/${auth.userInfo.id}`, {
             productId: product.id,
             quantity: 1,
@@ -32,7 +32,7 @@ export const Cart = () => {
     const handleUpQuantity = async (e, product) => {
         e.preventDefault();
         setIsLoad(true)
-        dispatch(addCartItem({product: product}))
+        dispatch(homeSlice.actions.addCartItem({product: product}))
         const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
             productId: product.id,
             quantity: 1,
@@ -46,7 +46,7 @@ export const Cart = () => {
     const handleClearCartItem = async (product) => {
         setIsLoad(true)
         console.log('clear')
-        dispatch(clearCartItem(product))
+        dispatch(homeSlice.actions.clearCartItem(product))
         const data = await postDataToAPI(`/api/cart/remove-cart-item/${auth.userInfo.id}`, {
             productId: product.id,
             price: product.price,

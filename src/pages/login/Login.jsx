@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { postDataToAPI } from '../../ultis/postApi'
 import { fetchDataFromAPI } from '../../ultis/api'
 import {useSelector, useDispatch } from 'react-redux';
-import {saveUserLogin } from '../../redux/actions';
+import { authSlice } from './loginSlice'
 import Spinner from '../../components/spinner/Spinner'
 import { IDX_BE_URL } from '../../ultis/setting'
 
@@ -30,7 +30,7 @@ export const Login = () => {
         if (jwt) {
             try {
                 const userInfo = await fetchDataFromAPI("/api/user/me", jwt);
-                dispatch(saveUserLogin(userInfo));
+                dispatch(authSlice.actions.saveUserLogin(userInfo));
                 console.log(userInfo);
             } catch (error) {
                 console.log(error);
@@ -45,7 +45,7 @@ export const Login = () => {
                 )
                 console.log(data)
                 if(data.id){
-                    dispatch(saveUserLogin(data))
+                    dispatch(authSlice.actions.saveUserLogin(data))
                 }
             } catch (error) {
                 console.log(error)
@@ -70,7 +70,8 @@ export const Login = () => {
                 localStorage.setItem("jwt", data.token);
                 
                 const userInfo = await fetchDataFromAPI("/api/user/me", data.token);
-                dispatch(saveUserLogin(userInfo))
+                localStorage.setItem("userInfo", JSON.stringify(userInfo));
+                dispatch(authSlice.actions.saveUserLogin(userInfo))
                 navigate(-1);
                 console.log(userInfo)
                 setErrLogin(false)

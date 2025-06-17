@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useFetch from '../../../hooks/useFetch'
-import { addCartItem } from '../../../redux/actions';
+import { homeSlice } from '../../home/addSlice';
 import { postDataToAPI } from '../../../ultis/postApi';
 import { useDispatch, useSelector } from 'react-redux';
 import {getUserInfo } from '../../../redux/selector';
@@ -30,7 +30,7 @@ export const ItemDetail = ({productId}) => {
 	const handleAddToCart = async (product) => {
         setIsLoad(true);
         console.log(product)
-        dispatch(addCartItem({product: product}))
+        dispatch(homeSlice.actions.addCartItem({product: product}))
         const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
             productId: product.id,
             quantity: 1,
@@ -85,7 +85,7 @@ export const ItemDetail = ({productId}) => {
 				<div class="product_details">
 					<div class="product_details_title">
 						<h2>{data.name}</h2>
-						<p>Nam tempus turpis at metus scelerisque placerat nulla deumantos solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis ut...</p>
+						{/* <p>Nam tempus turpis at metus scelerisque placerat nulla deumantos solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis ut...</p> */}
 					</div>
 					<div class="free_delivery d-flex flex-row align-items-center justify-content-center">
 						<span class="ti-truck"></span><span>free delivery</span>

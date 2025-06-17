@@ -4,12 +4,13 @@ import { getUserInfo } from "../redux/selector"
 import { Navigate, Outlet } from "react-router-dom"
 
 const ProtectRouter = () => {
-    const auth = useSelector(getUserInfo)
-    if(auth){
-      return <Outlet />;
-    } else {
-      return <Navigate to="/login" replace />;
-    }
+  const auth = useSelector(getUserInfo)
+  const userInfo = localStorage.getItem("userInfo")
+  if(auth || userInfo){
+    return <Outlet />;
+  } else {
+    return <Navigate to="/login" replace />;
+  }
 }
 
 export default ProtectRouter;
