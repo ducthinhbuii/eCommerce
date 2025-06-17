@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://be-ecommerce-zyst.onrender.com";
+const BASE_URL = "http://localhost:8081";
 
 export const fetchDataFromAPI = async(url, token, cookie, params) => {
     try {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {useDispatch } from 'react-redux';
 import './styles.scss'
-import { filterRangePrice } from '../../redux/actions';
+import { rangePriceSlice } from '../../pages/categories/sideBar/rangePriceSlice';
 
 export const RangeSlider = () => {
   const [minPrice, setMinPrice] = useState(0);
@@ -10,7 +10,7 @@ export const RangeSlider = () => {
 
   const handleFilter = () => {
     console.log(minPrice, maxPrice)
-    dispatch(filterRangePrice({minPrice, maxPrice}));
+    dispatch(rangePriceSlice.actions.rangePrice({minPrice, maxPrice}));
   }
 
   return (

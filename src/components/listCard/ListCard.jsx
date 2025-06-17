@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useFetch from '../../hooks/useFetch';
 import {useSelector, useDispatch} from 'react-redux'
-import { addCartItem } from '../../redux/actions';
+import { homeSlice } from '../../pages/home/addSlice';
 import { getAllCartItems, getUserInfo } from '../../redux/selector';
 import Spinner from '../spinner/Spinner';
 import { postDataToAPI } from '../../ultis/postApi';
@@ -29,7 +29,7 @@ export const ListCard = () => {
     const handleAddToCart = async (product) => {
         setIsLoad(true);
         console.log(product)
-        dispatch(addCartItem({product: product}))
+        dispatch(homeSlice.actions.addCartItem({product: product}))
         const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
             productId: product.id,
             quantity: 1,
@@ -100,7 +100,7 @@ export const ListCard = () => {
         <div class="row">
             <div class="col">
                 <div class="product-grid">
-                    {data.products.length >  0 && data.products?.map((product) => {
+                    {data?.products?.length >  0 && data?.products?.map((product) => {
                         return (
                             <>
                                 <div class="product-item men">

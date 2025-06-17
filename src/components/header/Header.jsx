@@ -3,7 +3,8 @@ import './styles.css'
 import {useNavigate} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCartItems, getUserInfo } from '../../redux/selector'
-import { getCart, saveUserLogin, saveUserLogout } from '../../redux/actions'
+import { homeSlice } from '../../pages/home/addSlice'
+import { authSlice } from '../../pages/login/loginSlice'
 import { fetchDataFromAPI } from '../../ultis/api'
 import useFetch from '../../hooks/useFetch'
 import { IDX_BE_URL } from '../../ultis/setting'
@@ -11,7 +12,7 @@ import axios from 'axios'
 
 export const Header = () => {
 	const auth = useSelector(getUserInfo)
-    const {data, isLoading, error} = useFetch(`/api/cart/${auth.userInfo?.id}`)
+    const {data, isLoading, error} = useFetch(`/api/cart/${auth?.userInfo?.id}`)
 	const cart = useSelector(getAllCartItems)
 	const navigate = useNavigate();
 	const jwt = localStorage.getItem("jwt");
@@ -19,7 +20,7 @@ export const Header = () => {
 
 	useEffect(() => {
 		if(data?.cartId){
-			dispatch(getCart(data))
+			dispatch(homeSlice.actions.getCart(data))
 		} else if (auth.userInfo?.isOauth){
 			getCartUser()
 		}
@@ -51,7 +52,7 @@ export const Header = () => {
 				if(userInfo.error){
 					handleLogout()
 				} else {
-					dispatch(saveUserLogin(userInfo));
+					dispatch(authSlice.actions.saveUserLogin(userInfo));
 					console.log(userInfo);
 				}
             } catch (error) {
@@ -68,7 +69,7 @@ export const Header = () => {
                 )
                 console.log(data)
                 if(data.id){
-                    dispatch(saveUserLogin(data))
+                    dispatch(authSlice.actions.saveUserLogin(data))
                 }
             } catch (error) {
                 console.log(error)
@@ -88,7 +89,7 @@ export const Header = () => {
 			localStorage.clear();
 		}
 		console.log('logout')
-		dispatch(saveUserLogout())
+		dispatch(authSlice.actions.saveUserLogout())
 	}
 
 	return (

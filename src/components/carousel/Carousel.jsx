@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const Carousel = () => {
     const carouselContainer = useRef();
-    let url = `/api/product/?category=669e0704b5d62c4fa209768c`
+    let url = `/api/product/?category=684115eab87d0074f2ddf1fb`
     const {data, isLoading, error} = useFetch(url);
     const navigate = useNavigate()
     
@@ -30,7 +30,7 @@ export const Carousel = () => {
             <div class="col">
                 <div class="product_slider_container">
                     <div class="owl-carousel owl-theme product_slider" ref={carouselContainer}>
-                    {data.products.length >  0 && data.products?.map((product) => {
+                    {data?.products?.length >  0 && data?.products?.map((product) => {
                         return (
                             <>
                                 <div class="owl-item product_slider_item">
