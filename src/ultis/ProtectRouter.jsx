@@ -6,7 +6,7 @@ import { Navigate, Outlet } from "react-router-dom"
 const ProtectRouter = () => {
   const auth = useSelector(getUserInfo)
   const userInfo = localStorage.getItem("userInfo")
-  if(auth || userInfo){
+  if(auth?.auth || userInfo){
     return <Outlet />;
   } else {
     return <Navigate to="/login" replace />;

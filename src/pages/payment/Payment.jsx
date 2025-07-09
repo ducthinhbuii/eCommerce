@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import {fetchDataFromAPI} from '../../ultis/api'
 import './styless.scss'
+import { useDispatch } from 'react-redux'
+import { resetCartAsync } from '../home/addSlice'
 
 export const Payment = () => {
     const {orderId} = useParams()
@@ -9,16 +11,18 @@ export const Payment = () => {
     const transactionStatus = urlParams.get("vnp_ResponseCode");
     const vnp_TransactionNo = urlParams.get("vnp_TransactionNo");
     const totalPrice = urlParams.get("vnp_Amount") / 100;
-    const token = localStorage.getItem("jwt")
+    const token = localStorage.getItem("jwt");
+    const dispatch = useDispatch();
 
     const updatePayment = async () => {
         console.log(orderId)
         console.log(vnp_TransactionNo)
         if(transactionStatus === "00"){
             const data = await fetchDataFromAPI(`/api/payment/update-payment?orderId=${orderId}&vnp_TransactionNo=${vnp_TransactionNo}`, token);
-            const reset = await fetchDataFromAPI(`/api/cart/reset-cart/${orderId}`, token);
+            await dispatch(resetCartAsync({ orderId, token })).unwrap();
             console.log(data)
             console.log(reset)
+            
         }
     }
 

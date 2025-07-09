@@ -16,6 +16,7 @@ import { User } from './pages/user/User'
 import { Information } from './pages/user/infomation/Information'
 import { OrderStatus } from './pages/user/order-status/OrderStatus'
 import ProtectRouter from './ultis/ProtectRouter'
+import OAuth2RedirectHandler from './pages/login/Oauth2Redirect'
 
 
 function App() {
@@ -31,7 +32,7 @@ function App() {
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>} />
 
-
+          <Route path="/oauth2-redirect" element={<OAuth2RedirectHandler/>} />
 
             
           <Route element={<ProtectRouter />}>

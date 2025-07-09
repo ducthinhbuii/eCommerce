@@ -53,7 +53,7 @@ export const Address = () => {
             <div><h5><b>YOUR ADDRESS</b></h5></div>
             <select style={{margin: '14px 0px 0px 0px'}} onChange={handleSelectAddress}>
                 {
-                    auth.userInfo.listAddress.map((address, index) => {
+                    auth?.userInfo?.listAddress?.map((address, index) => {
 
                         return (
                             <option value={index} class="text-muted">{address.street}, {address.city}, {address.state}</option>

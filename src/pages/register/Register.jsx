@@ -50,7 +50,7 @@ export const Register = () => {
                     navigate('/login');
                 }, 3000);
             } else {
-                notify("Username is alredy exist")
+                notify(res?.message || "Error creating account")
 
             }
         }

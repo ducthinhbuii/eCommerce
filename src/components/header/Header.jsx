@@ -3,93 +3,36 @@ import './styles.css'
 import {useNavigate} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCartItems, getUserInfo } from '../../redux/selector'
-import { homeSlice } from '../../pages/home/addSlice'
-import { authSlice } from '../../pages/login/loginSlice'
-import { fetchDataFromAPI } from '../../ultis/api'
-import useFetch from '../../hooks/useFetch'
-import { IDX_BE_URL } from '../../ultis/setting'
-import axios from 'axios'
+import { getCartByUserId, homeSlice } from '../../pages/home/addSlice'
+import { authSlice, fetchUserInfo, logoutUser } from '../../pages/login/loginSlice'
 
 export const Header = () => {
 	const auth = useSelector(getUserInfo)
-    const {data, isLoading, error} = useFetch(`/api/cart/${auth?.userInfo?.id}`)
 	const cart = useSelector(getAllCartItems)
 	const navigate = useNavigate();
-	const jwt = localStorage.getItem("jwt");
 	const dispatch = useDispatch();
+	console.log(auth);
 
 	useEffect(() => {
-		if(data?.cartId){
-			dispatch(homeSlice.actions.getCart(data))
-		} else if (auth.userInfo?.isOauth){
-			getCartUser()
-		}
-        dispatchUserInfo();
-        console.log("render")
-    }, [data])
-
-	const getCartUser = async () => {
-		try {
-			console.log(auth.userInfo?.id)
-			const cartUser = await axios.get(
-				IDX_BE_URL + `/api/cart/${auth.userInfo?.id}`,
-				{
-					withCredentials: true
+		const loadUserAndCart = async () => {
+			if (!auth.userInfo?.id) {
+				try {
+					const result = await dispatch(fetchUserInfo()).unwrap();
+					if (result?.id) {
+						dispatch(getCartByUserId(result.id));
+					}
+				} catch (error) {
+					// dispatch(logoutUser());
+					  console.log("Lỗi khi lấy thông tin user hoặc cart:", error);
 				}
-			)
-			if(cartUser.data){
-				dispatch(getCart(cartUser.data))
 			}
-		} catch (error) {
-			console.log(error);
-		}
-	}
- 
-    const dispatchUserInfo = async () => {
-        if (jwt) {
-            try {
-                const userInfo = await fetchDataFromAPI("/api/user/me", jwt);
-				if(userInfo.error){
-					handleLogout()
-				} else {
-					dispatch(authSlice.actions.saveUserLogin(userInfo));
-					console.log(userInfo);
-				}
-            } catch (error) {
-				handleLogout()
-                console.log(error);
-            }
-        } else {  //handle oauth2 google
-            try {
-                const {data} = await axios.get(
-                    IDX_BE_URL + "/api/user/google/me",
-                    {
-                        withCredentials: true
-                    }
-                )
-                console.log(data)
-                if(data.id){
-                    dispatch(authSlice.actions.saveUserLogin(data))
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-    };
+		};
+
+		loadUserAndCart();
+    }, [dispatch])
 
 	const handleLogout = async ()=> {
-		if(auth.userInfo?.isOauth){
-			await axios.get(
-				IDX_BE_URL + "/logout",
-				{
-					withCredentials: true
-				}
-			)
-		} else {
-			localStorage.clear();
-		}
-		console.log('logout')
-		dispatch(authSlice.actions.saveUserLogout())
+		dispatch(logoutUser());
 	}
 
 	return (

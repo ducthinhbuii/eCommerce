@@ -3,7 +3,7 @@ import useFetch from '../../../hooks/useFetch';
 import {useDispatch, useSelector} from 'react-redux';
 import { getPriceRange, getUserInfo } from '../../../redux/selector';
 import Spinner from '../../../components/spinner/Spinner'
-import { homeSlice } from '../../home/addSlice';
+import { addCartItemAsync, homeSlice } from '../../home/addSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { postDataToAPI } from '../../../ultis/postApi';
@@ -16,7 +16,7 @@ export const Products = ({categoryId}) => {
     const [sort, setSort] = useState('');
     const token = localStorage.getItem("jwt");
     const auth = useSelector(getUserInfo);
-    const [isLoad, setIsLoad] = useState(false)
+    const loading = useSelector((state) => state.home.loading);
     const [arrCurNumOfPages, setArrCurNumOfPages] = useState([])
     let url = categoryId 
         ? `/api/product/?category=${categoryId}&pageSize=${pageSize}&pageNumber=${pageNumber - 1}&sort=${sort}` 
@@ -29,26 +29,16 @@ export const Products = ({categoryId}) => {
     const totalPage = Math.ceil(data?.totalCount / pageSize);
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
     const notify = (text) => toast(text);
 
     const handleAddToCart = async (product) => {
-        setIsLoad(true);
-        console.log(product)
-        dispatch(homeSlice.actions.addCartItem({product: product}))
-        const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
-            productId: product.id,
-            quantity: 1,
-            price: product.price,
-            discountPrice: product.discountPrice
-        }, token);
-        console.log(data)
-        if(data === "Add Item to Cart"){
-            notify("Add Item Successfully")
-        } else {
-            notify("Add Item Error, Try Again!")
+        try {
+            await dispatch(addCartItemAsync({ userId: auth.userInfo.id, product, token })).unwrap();
+            notify("🛒 Đã thêm vào giỏ hàng!");
+        } catch (error) {
+            console.error("Lỗi thêm giỏ hàng:", error);
+            notifyError("❌ Thêm sản phẩm thất bại!");
         }
-        setIsLoad(false)
     }
 
     const settingPagination = (data) => {
@@ -95,13 +85,18 @@ export const Products = ({categoryId}) => {
         }
     }
     
-    useEffect(()=> {
+    useEffect(() => {
         settingPagination(data)
     }, [data])
+
+    useEffect(() => {
+        // Reset pageNumber về 1 khi categoryId thay đổi
+        setPageNumber(1);
+    }, [categoryId]);
     
     return (
-        (isLoading && isLoad) ? <Spinner isLogin={true}/> :
-        !isLoading && !isLoad && data &&
+        (isLoading || loading) ? <Spinner isLogin={true}/> :
+        (!isLoading && !loading && data) ?
         <div class="main_content">
             <div class="products_iso">
                 <div class="row">
@@ -367,5 +362,7 @@ export const Products = ({categoryId}) => {
                 </div>
             </div>
         </div>
+        :
+        <div className="error-message text-center text-danger p-2">Lỗi tải dữ liệu: {error}</div>        
     )
 }
