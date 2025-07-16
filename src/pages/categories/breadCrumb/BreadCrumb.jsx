@@ -8,13 +8,14 @@ export const BreadCrumb = ({categoryId}) => {
   const [categories, setCategories] = useState([]);
   const token = localStorage.getItem("jwt");
   const navigate = useNavigate();
+  const BASE_URL = import.meta.env.VITE_REACT_BACKEND_BASE_URL;
   
   const findRootCat = async (categoryId, tmpCat) =>{
     if(categoryId){
       try {   
         const url = `/api/category/${categoryId}`
         const response = await axios.get(
-          "http://localhost:8081" + url,
+          BASE_URL + url,
           {
               headers: {
                   Authorization: "Bearer " + token,
