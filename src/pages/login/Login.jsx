@@ -4,57 +4,25 @@ import { useNavigate } from 'react-router-dom'
 import { postDataToAPI } from '../../ultis/postApi'
 import { fetchDataFromAPI } from '../../ultis/api'
 import {useSelector, useDispatch } from 'react-redux';
-import { authSlice } from './loginSlice'
+import { authSlice, fetchUserInfo, loginUser } from './loginSlice'
 import Spinner from '../../components/spinner/Spinner'
-import { IDX_BE_URL } from '../../ultis/setting'
 
 import axios from 'axios'
+import { getCartByUserId } from '../home/addSlice'
+import { IDX_BE_URL } from '../../ultis/setting'
 
 
 export const Login = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [errLogin, setErrLogin] = useState(false)
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const jwt = localStorage.getItem("jwt");
+    const { loading, error } = useSelector((state) => state.auth);
 
     useEffect(() => {
-        dispatchUserInfo();
-        console.log("render")
-    }, [jwt])
+        dispatch(fetchUserInfo());
+    }, []);
 
-
-    const dispatchUserInfo = async () => {
-        // const data = await fetchDataFromAPI("/api/order/", jwt)
-        // console.log(data)
-        if (jwt) {
-            try {
-                const userInfo = await fetchDataFromAPI("/api/user/me", jwt);
-                dispatch(authSlice.actions.saveUserLogin(userInfo));
-                console.log(userInfo);
-            } catch (error) {
-                console.log(error);
-            }
-        } else {
-            try {
-                const {data} = await axios.get(
-                    IDX_BE_URL + "/api/user/google/me",
-                    {
-                        withCredentials: true
-                    }
-                )
-                console.log(data)
-                if(data.id){
-                    dispatch(authSlice.actions.saveUserLogin(data))
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-    };
     
     const handleSubmit = async (e) => {
-        setIsLoading(true);
         e.preventDefault();
         const dataRaw = new FormData(e.currentTarget);
         const userData = {
@@ -63,50 +31,24 @@ export const Login = () => {
         }
         
         try {
-            const data = await postDataToAPI("/api/user/login", userData);
-            setIsLoading(false)
-            console.log(data)
-            if(data?.authenticated){
-                localStorage.setItem("jwt", data.token);
-                
-                const userInfo = await fetchDataFromAPI("/api/user/me", data.token);
-                localStorage.setItem("userInfo", JSON.stringify(userInfo));
-                dispatch(authSlice.actions.saveUserLogin(userInfo))
-                navigate(-1);
-                console.log(userInfo)
-                setErrLogin(false)
-            } else {
-                setErrLogin(true);
-            } 
-        } catch (error) {
-            setIsLoading(false)
-            console.log(error)
+            const result = await dispatch(loginUser(userData)).unwrap();
+            if (result?.id) {
+                dispatch(getCartByUserId(result.id));
+            }
+            navigate("/");
+        } catch (err) {
+            console.log("Đăng nhập lỗi: ", err);
         }
     }
 
     const handleGoogleLogin = async() => {
         console.log('login google')
-        try {
-            const data = await axios.get(
-                IDX_BE_URL + "/api/user/login-google",
-                {
-                    withCredentials: true
-                }
-            )
-            console.log(data)
-            // if(response.redirected){
-            //     document.location = response.url
-
-            // }
-        } catch (error) {
-            console.log(error);
-            document.location = IDX_BE_URL + "/api/user/login-google";
-        }
+        document.location = IDX_BE_URL + "/api/user/login-google"; 
     }
 
     return (
-        isLoading ? <Spinner isLogin={true}/> :
-        !isLoading &&
+        loading ? <Spinner isLogin={true}/> :
+        !loading &&
         <div className='login'>
             <div class="container">
                 <div class="login-container">
@@ -121,7 +63,7 @@ export const Login = () => {
                             <input type="text" placeholder="USERNAME" name="username"/>
                             <input type="password" placeholder="PASSWORD" name="password" />
                             <button type="submit" class="opacity">SUBMIT</button>
-                            {errLogin && <p style={{color: 'red'}}>Username or password incorrect</p>}
+                            {error && <p style={{ color: 'red' }}>{error }</p>}
                         </form>
                         <div className="login-oauth2">
                             <span>OR LOGIN WITH</span>

@@ -17,11 +17,14 @@ const useFetch = (url, token) => {
         setError(null);
         try {
             const data = await fetchDataFromAPI(url, jwt);
+            if (data?.error) {
+                throw new Error(data?.message || "Something went wrong");
+            }
             setIsLoading(false)
             setData(data);
         } catch (error) {
             setIsLoading(false)
-            setError("Error");
+            setError(error?.message || "Something went wrong");
         }
     }
 

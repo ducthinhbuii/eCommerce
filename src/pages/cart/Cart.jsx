@@ -3,62 +3,33 @@ import './styles.scss'
 import { useDispatch, useSelector} from 'react-redux'
 import { getAllCartItems, getCartTotalMoney, getUserInfo } from '../../redux/selector'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { homeSlice } from '../home/addSlice'
-import { postDataToAPI } from '../../ultis/postApi'
+import { addCartItemAsync, clearCartItemAsync, downQuantityCartItemAsync, homeSlice } from '../home/addSlice'
 import Spinner from '../../components/spinner/Spinner'
 
 export const Cart = () => {
-    const [isLoad, setIsLoad] = useState(false)
     const auth = useSelector(getUserInfo)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const data = useSelector(getAllCartItems);
     const token = localStorage.getItem("jwt");
+    const loading = useSelector((state) => state.home.loading);
     
     const handleDownQuantity = async (e, product) => {
         e.preventDefault();
-        setIsLoad(true)
-        dispatch(homeSlice.actions.downQuantityCartItem(product))
-        const data = await postDataToAPI(`/api/cart/remove/${auth.userInfo.id}`, {
-            productId: product.id,
-            quantity: 1,
-            price: product.price,
-            discountPrice: product.discountPrice
-        }, token);
-        console.log(data)
-        setIsLoad(false)
+        await dispatch(downQuantityCartItemAsync({ userId: auth.userInfo.id, product, token })).unwrap();
     }
 
     const handleUpQuantity = async (e, product) => {
         e.preventDefault();
-        setIsLoad(true)
-        dispatch(homeSlice.actions.addCartItem({product: product}))
-        const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
-            productId: product.id,
-            quantity: 1,
-            price: product.price,
-            discountPrice: product.discountPrice
-        }, token);
-        console.log(data)
-        setIsLoad(false)
+        await dispatch(addCartItemAsync({ userId: auth.userInfo.id, product, token })).unwrap();
     }
 
     const handleClearCartItem = async (product) => {
-        setIsLoad(true)
-        console.log('clear')
-        dispatch(homeSlice.actions.clearCartItem(product))
-        const data = await postDataToAPI(`/api/cart/remove-cart-item/${auth.userInfo.id}`, {
-            productId: product.id,
-            price: product.price,
-            discountPrice: product.discountPrice
-        }, token);
-        console.log(data)
-        setIsLoad(false)
+        await dispatch(clearCartItemAsync({ userId: auth.userInfo.id, product, token })).unwrap();
     }
 
     return (
-        isLoad ? <Spinner isLogin={true}/> :
-        !isLoad &&
+        loading ? <Spinner /> :
         data && data.cartItems &&
         <div className="cart">
             <div className="container">

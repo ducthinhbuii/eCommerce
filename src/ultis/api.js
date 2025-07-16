@@ -1,8 +1,9 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8081";
+const BASE_URL = import.meta.env.VITE_REACT_BACKEND_BASE_URL;
 
-export const fetchDataFromAPI = async(url, token, cookie, params) => {
+export const fetchDataFromAPI = async (url, token, cookie, params) => {
+    console.log(BASE_URL);
     try {
         const {data} = await axios.get(
             BASE_URL + url,
