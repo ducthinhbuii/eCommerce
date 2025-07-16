@@ -44,14 +44,14 @@ export const Register = () => {
             }, jwt)
             console.log(res)
             // notify("Username is alredy exist")
-            if(res === "CREATED"){
+            if(res === "User registered successfully"){
                 notify("Create account succesfully")
                 setTimeout(() => {
                     navigate('/login');
                 }, 3000);
             } else {
                 notify(res?.message || "Error creating account")
-
+                
             }
         }
     }
