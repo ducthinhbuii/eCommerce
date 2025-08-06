@@ -140,29 +140,19 @@ npm run preview
 npm run lint
 ```
 
+### Payment Testing
+For testing payment functionality, you can use the following test card details:
+
+| Field | Value |
+|-------|-------|
+| **Card Number** | `9704198526191432198` |
+| **Cardholder Name** | `NGUYEN VAN A` |
+| **Expiry Date** | `07/15` |
+| **OTP Password** | `123456` |
+
+> **Note**: These are test card details for development and testing purposes only. Do not use in production.
+
 ## 🔧 Configuration
-
-### Redux Store Configuration
-The application uses Redux Toolkit with the following slices:
-- `authSlice`: User authentication state
-- `homeSlice`: Homepage data management
-- `rangePriceSlice`: Product filtering state
-
-Store configuration in `src/redux/store.js`:
-```javascript
-import { configureStore } from '@reduxjs/toolkit';
-import { authSlice } from '../pages/login/loginSlice';
-import { homeSlice } from '../pages/home/addSlice';
-import { rangePriceSlice } from '../pages/categories/sideBar/rangePriceSlice';
-
-const store = configureStore({
-    reducer: {
-        auth: authSlice.reducer,
-        home: homeSlice.reducer,
-        filter: rangePriceSlice.reducer,
-    }
-});
-```
 
 ### API Configuration
 API calls are configured in `src/ultis/api.js` using Axios with:
@@ -213,18 +203,3 @@ export const fetchDataFromAPI = async (url, token, cookie, params) => {
 - Payment integration
 - Order status tracking
 - User dashboard for order history
-
-## 🎨 Styling
-
-The application uses SCSS for styling with:
-- Modular component styles
-- Responsive design principles
-- Modern UI components
-- Custom animations and transitions
-
-## 🔒 Security Features
-
-- Protected routes for authenticated users
-- Token-based authentication
-- Secure API communication
-- Input validation and sanitization
