@@ -19,6 +19,7 @@ export const loginUser = createAsyncThunk(
         const data = await postDataToAPI('/api/user/login', userData);
         if (data?.authenticated) {
           localStorage.setItem('jwt', data.token);
+          localStorage.setItem('refreshToken', data.refreshToken);
           console.log("loginUser data: ", data);
           const userInfo = await fetchDataFromAPI('/api/user/me', data.token);
           localStorage.setItem('userInfo', JSON.stringify(userInfo));
