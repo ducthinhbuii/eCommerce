@@ -11,23 +11,25 @@ function OAuth2RedirectHandler() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-    useEffect(() => {
-        loginGoogle();
-    }, []);
+  useEffect(() => {
+      loginGoogle();
+  }, []);
 
   const loginGoogle = async () => {
-      console.log("render");
-      const params = new URLSearchParams(location.search);
-      const token = params.get("token");
-      if (token) {
-        const result = await dispatch(loginUserGoogle(token)).unwrap();
-        console.log(result);
-        if (result?.id) {
-            dispatch(getCartByUserId(result.id));
-        }
-        window.location.href = "/";
+    console.log("render");
+    const params = new URLSearchParams(location.search);
+    const token = params.get("token");
+    const refreshToken = params.get("refreshToken");
+    console.log(token, refreshToken);
+    if (token) {
+      const result = await dispatch(loginUserGoogle({ jwt: token, refreshToken })).unwrap();
+      console.log(result);
+      if (result?.id) {
+          dispatch(getCartByUserId(result.id));
       }
+      window.location.href = "/";
     }
+  }
 
   return <Spinner isLogin={true} />;
 }
