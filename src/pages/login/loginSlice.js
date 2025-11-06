@@ -36,9 +36,10 @@ export const loginUser = createAsyncThunk(
 // Async thunk for login
 export const loginUserGoogle = createAsyncThunk(
   'auth/loginGoogle',
-  async (jwt, { rejectWithValue }) => {
+  async ({ jwt, refreshToken }, { rejectWithValue }) => {
     try {
         localStorage.setItem('jwt', jwt);
+        localStorage.setItem('refreshToken', refreshToken);
         const userInfo = await fetchDataFromAPI('/api/user/me', jwt);
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
         return userInfo; // Return userInfo as the fulfilled payload
