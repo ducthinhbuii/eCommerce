@@ -25,6 +25,9 @@ export const Products = ({categoryId}) => {
     if(rangePrice && rangePrice.minPrice && rangePrice.maxPrice){
         url += `&minPrice=${rangePrice.minPrice}&maxPrice=${rangePrice.maxPrice}`
     }
+    if(rangePrice && rangePrice.regex){
+        url += `&name=${rangePrice.regex}`
+    }
     const {data, isLoading, error} = useFetch(url);
     const totalPage = Math.ceil(data?.totalCount / pageSize);
     const dispatch = useDispatch()

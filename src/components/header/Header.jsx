@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './styles.css'
 import {useNavigate} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCartItems, getUserInfo } from '../../redux/selector'
 import { getCartByUserId, homeSlice } from '../../pages/home/addSlice'
 import { authSlice, fetchUserInfo, logoutUser } from '../../pages/login/loginSlice'
+import { rangePriceSlice } from '../../pages/categories/sideBar/rangePriceSlice'
 
 export const Header = () => {
 	const auth = useSelector(getUserInfo)
 	const cart = useSelector(getAllCartItems)
+	const [showSearch, setShowSearch] = useState(false);
+	const [keyword, setKeyword] = useState('');
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	console.log(auth);
@@ -116,7 +119,16 @@ export const Header = () => {
 									<li><a href="#">contact</a></li>
 								</ul>
 								<ul class="navbar_user">
-									<li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+									<li>
+										<a href="#"
+											onClick={(e) => {
+												e.preventDefault();
+												setShowSearch(prev => !prev);
+											}}
+										>
+											<i class="fa fa-search" aria-hidden="true"></i>
+										</a>
+									</li>
 									<li className='navbar_user_account'>
 										<a style={{display: 'inline-block', width: 'auto', padding: '0 16px'}} href="#">
 										{auth && auth.userInfo && <img src={auth.userInfo.avatar} style={{width: '26px', marginRight: '10px', borderRadius: '50%'}} alt="" />}
@@ -149,6 +161,32 @@ export const Header = () => {
 								</div>
 							</nav>
 						</div>
+					</div>
+					<div className="row justify-content-center pb-2">
+						{showSearch && (
+							<div className="search-wrapper col-lg-8 text-center">
+								<div className="container">
+								<div className="input-group d-flex search-gap">
+									<input
+										type="text"
+										className="form-control"
+										placeholder="Search products..."
+										value={keyword}
+  										onChange={(e) => setKeyword(e.target.value)}
+									/>
+									<button
+										className="btn btn-danger"
+										onClick={() => { 
+											dispatch(rangePriceSlice.actions.rangePrice({ regex: keyword }));
+											navigate('/categories');
+										}}
+									>
+									<i className="fa fa-search"></i>
+									</button>
+								</div>
+								</div>
+							</div>
+						)}
 					</div>
 				</div>
 			</div>

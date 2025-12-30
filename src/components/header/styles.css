@@ -45,6 +45,9 @@ COLOR PALETTE
 /*********************************
 2. Body and some general stuff
 *********************************/
+.search-gap{
+	gap: 4px;
+}
 
 *
 {

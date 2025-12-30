@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initState = {
+    regex: null,
     minPrice: null,
     maxPrice: null
 }
@@ -10,8 +11,10 @@ export const rangePriceSlice = createSlice({
     initialState: initState,
     reducers: {
         rangePrice(state, action) {
-            state.minPrice = action.payload.minPrice;
-            state.maxPrice = action.payload.maxPrice;
+            return {
+                ...state,
+                ...action.payload,
+            };
         },
     },
 });

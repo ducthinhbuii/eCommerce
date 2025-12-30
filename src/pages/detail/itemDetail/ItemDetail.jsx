@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useFetch from '../../../hooks/useFetch'
-import { homeSlice } from '../../home/addSlice';
+import { addCartItemAsync, homeSlice } from '../../home/addSlice';
 import { postDataToAPI } from '../../../ultis/postApi';
 import { useDispatch, useSelector } from 'react-redux';
 import {getUserInfo } from '../../../redux/selector';
@@ -28,22 +28,33 @@ export const ItemDetail = ({productId}) => {
 	}, [data])
 
 	const handleAddToCart = async (product) => {
-        setIsLoad(true);
-        console.log(product)
-        dispatch(homeSlice.actions.addCartItem({product: product}))
-        const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
-            productId: product.id,
-            quantity: 1,
-            price: product.price,
-            discountPrice: product.discountPrice
-        }, token);
-        console.log(data)
-        if(data === "Add Item to Cart"){
-            notify("Add Item Successfully")
-        } else {
-            notify("Add Item Error, Try Again!")
+        // setIsLoad(true);
+        // console.log(product)
+        // dispatch(homeSlice.actions.addCartItem({product: product}))
+        // const data = await postDataToAPI(`/api/cart/add/${auth.userInfo.id}`, {
+        //     productId: product.id,
+        //     quantity: 1,
+        //     price: product.price,
+        //     discountPrice: product.discountPrice
+        // }, token);
+        // console.log(data)
+        // if(data === "Add Item to Cart"){
+        //     notify("Add Item Successfully")
+        // } else {
+        //     notify("Add Item Error, Try Again!")
+        // }
+		// setIsLoad(false)
+		try {
+            console.log("ok");
+            await dispatch(addCartItemAsync({ userId: auth.userInfo.id, product, token })).unwrap();
+            notify("🛒 Đã thêm vào giỏ hàng!");
+        } catch (error) {
+            console.log("Lỗi thêm giỏ hàng:", error);
+            notify("❌ Thêm sản phẩm thất bại!");
+            if (auth?.auth == false) {
+                navigate('/login');
+            }
         }
-        setIsLoad(false)
     }
 
 	return (
@@ -108,12 +119,12 @@ export const ItemDetail = ({productId}) => {
 						</ul>
 					</div>
 					<div class="quantity d-flex flex-column flex-sm-row align-items-sm-center">
-						<span>Quantity:</span>
+						{/* <span>Quantity:</span>
 						<div class="quantity_selector">
 							<span class="minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
 							<span id="quantity_value">1</span>
 							<span class="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
-						</div>
+						</div> */}
 						<div class="red_button2 add_to_cart_button2"
 							onClick={() => handleAddToCart(data)}
 						><a href="#">add to cart</a></div>
